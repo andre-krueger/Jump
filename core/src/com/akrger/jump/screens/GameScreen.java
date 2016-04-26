@@ -26,7 +26,7 @@ public class GameScreen implements Screen {
         this.viewport = new FitViewport(Jump.WIDTH, Jump.HEIGHT, camera);
         this.stage = new Stage(this.viewport);
         this.jumper = new Jumper();
-        this.stage.addActor(jumper);
+        this.stage.addActor(this.jumper);
     }
 
     public void clearScreen() {
@@ -40,8 +40,16 @@ public class GameScreen implements Screen {
 
     private void handleInput(float delta) {
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            Gdx.app.log("Move", "");
-            jumper.addAction(Actions.moveBy(4f, 0));
+            jumper.addAction(Actions.moveBy(2f, 0));
+            Gdx.app.log("Position", String.format("%s", jumper.getX()));
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            jumper.addAction(Actions.moveBy(-2f, 0));
+            Gdx.app.log("Position", String.format("%s", jumper.getX()));
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            jumper.addAction(Actions.moveBy(0, 2f));
+            Gdx.app.log("Position", String.format("%s", jumper.getY()));
         }
     }
 
@@ -55,7 +63,7 @@ public class GameScreen implements Screen {
         clearScreen();
         update(delta);
         stage.getBatch().setProjectionMatrix(camera.combined); // is this needed?
-        stage.act();
+        stage.act(delta);
         stage.draw();
     }
 

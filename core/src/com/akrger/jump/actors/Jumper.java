@@ -14,6 +14,6 @@ public class Jumper extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(texture, 0, 0);
+        batch.draw(texture, this.getX(), this.getY());
     }
 }
