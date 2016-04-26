@@ -7,6 +7,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -19,13 +21,15 @@ public class GameScreen implements Screen {
     private Jumper jumper;
     private OrthographicCamera camera;
     private Viewport viewport;
+    private World world;
 
     public GameScreen(final Jump jump) {
         this.jump = jump;
+        this.world = new World(new Vector2(0, -98f), true);
         this.camera = new OrthographicCamera();
         this.viewport = new FitViewport(Jump.WIDTH, Jump.HEIGHT, camera);
         this.stage = new Stage(this.viewport);
-        this.jumper = new Jumper();
+        this.jumper = new Jumper(this.world);
         this.stage.addActor(this.jumper);
     }
 
@@ -62,6 +66,8 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         clearScreen();
         update(delta);
+        world.step(Gdx.graphics.getDeltaTime(), 6, 2);
+        jumper.setPosition(jumper.body.getPosition().x, jumper.body.getPosition().y);
         stage.getBatch().setProjectionMatrix(camera.combined); // is this needed?
         stage.act(delta);
         stage.draw();
@@ -90,5 +96,6 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        world.dispose();
     }
 }
